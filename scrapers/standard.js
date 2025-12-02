@@ -98,6 +98,11 @@ const getReformAttendanceData = (attendanceHtml, UIDs) => {
     const party = 'reform';
     const $ = cheerio.load(attendanceHtml);
 
+    const $header = $('table.mgStatsTable:first > thead:first > tr:first > th');
+
+    const virtual =
+        $($header[3]).attr('abbr').toLowerCase() === 'present virtual'; // assuming there are no other edge cases pls?
+
     const $rows = $('table.mgStatsTable:first > tbody:first > tr');
 
     const $reformRows = $rows.filter((i, el) => {
@@ -119,7 +124,10 @@ const getReformAttendanceData = (attendanceHtml, UIDs) => {
         const uid = params.split('&')[0];
         const name = $($(councillorCol).children('a')[0]).text();
         const expected = parseInt($(children[1]).text());
-        const present = parseInt($(children[2]).text());
+        let present = parseInt($(children[2]).text());
+        if (virtual) {
+            present += parseInt($(children[3]).text());
+        }
 
         data.push({ uid, name, expected, present, party });
     });

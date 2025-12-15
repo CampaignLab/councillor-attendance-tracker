@@ -79,7 +79,7 @@ app.get('/api/council/:file', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+    res.sendFile('./public/index.html');
 });
 
 app.listen(PORT, () => {

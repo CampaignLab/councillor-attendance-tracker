@@ -5,7 +5,7 @@ import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const OUT_DIR = path.resolve('../scrapers/out');
+const OUT_DIR = path.resolve('./scrapers/out');
 
 app.use(express.static('public'));
 
@@ -38,7 +38,7 @@ app.get('/api/headshot', async (req, res) => {
 app.get('/api/councils', async (req, res) => {
   try {
     // Read councils.json to get baseUrl mapping
-    const councilsJsonPath = path.resolve('../scrapers/councils.json');
+        const councilsJsonPath = path.resolve('./scrapers/councils.json');
     const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
     const councilMeta = JSON.parse(councilsJson);
 

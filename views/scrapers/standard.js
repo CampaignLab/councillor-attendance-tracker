@@ -157,6 +157,11 @@ export const collectReformAttendanceData = async (
 const main = async () => {
     const jsonCouncils = await fs.readFile('./councils.json');
     const councils = JSON.parse(jsonCouncils);
+    try {
+        await fs.access('./out');
+    } catch (err) {
+        await fs.mkdir('./out');
+    }
 
     for (let { fileName, councilName, baseUrl } of councils) {
         try {

@@ -15,7 +15,7 @@ export const updateVercelReformAttendanceData = async () => {
             // this object will eventually contain a list of councillor objects from all parties - for now everyone will be a reform councillor
             const obj = { councilName, attendanceData: data };
             const jsonStr = JSON.stringify(obj);
-            const res = await put(`out/${fileName}Data.json`, jsonStr, {
+            const res = await put(`${fileName}Data.json`, jsonStr, {
                 access: 'public',
                 allowOverwrite: true,
             }); //probably dont need the output

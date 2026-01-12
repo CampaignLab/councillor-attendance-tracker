@@ -3,7 +3,7 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { updateVercelReformAttendanceData } from './public/scrapers/vercelstandard';
+import { updateVercelReformAttendanceData } from './scrapers/vercelstandard';
 import { list } from '@vercel/blob';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -47,9 +47,7 @@ app.get('/api/headshot', async (req, res) => {
 app.get('/api/councils', async (req, res) => {
     try {
         // Read councils.json to get baseUrl mapping
-        const councilsJsonPath = path.resolve(
-            './public/scrapers/councils.json'
-        );
+        const councilsJsonPath = path.resolve('./scrapers/councils.json');
         const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
         const councilMeta = JSON.parse(councilsJson);
 

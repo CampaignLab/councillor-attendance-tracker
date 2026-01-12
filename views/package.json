@@ -8,6 +8,7 @@
         "scrape": "cd scrapers && node standard.js && cd .."
     },
     "dependencies": {
+        "@vercel/blob": "^2.0.0",
         "cheerio": "^1.1.2",
         "express": "^4.18.2"
     }

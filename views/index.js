@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { updateVercelReformAttendanceData } from path.resolve('./scrapers/vercelstandard');
+import { updateVercelReformAttendanceData } from `${path.resolve('./scrapers/vercelstandard')}`;
 import { list } from '@vercel/blob';
 
 const __filename = fileURLToPath(import.meta.url);

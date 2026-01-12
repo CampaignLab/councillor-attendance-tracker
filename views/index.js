@@ -3,6 +3,7 @@ import express from 'express';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { updateVercelReformAttendanceData } from './scrapers/vercelstandard';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -102,6 +103,25 @@ app.get('/api/council/:file', async (req, res) => {
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// vercel cron job
+app.get('/api/update_data', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (
+        !process.env.CRON_SECRET ||
+        authHeader !== `Bearer ${process.env.CRON_SECRET}`
+    ) {
+        res.status(401).json({ success: false });
+    } else {
+        try {
+            const success = await updateVercelReformAttendanceData();
+
+            res.status(200).json(success);
+        } catch (err) {
+            res.status(500).json({ success: false, err: err });
+        }
+    }
 });
 
 app.listen(PORT, () => {

@@ -1,7 +1,7 @@
 import { collectReformAttendanceData } from './standard';
 import { put } from '@vercel/blob';
 
-export const updateVercelReformAttendanceData = async () => {
+const updateVercelReformAttendanceData = async () => {
     const jsonCouncils = await fs.readFile('./councils.json');
     const councils = JSON.parse(jsonCouncils);
 
@@ -26,3 +26,5 @@ export const updateVercelReformAttendanceData = async () => {
     }
     return { success: true };
 };
+
+export default { updateVercelReformAttendanceData };

@@ -106,7 +106,7 @@ app.get('/', (req, res) => {
 });
 
 // vercel cron job
-app.get('/api/update_data', async (req, res) => {
+app.get('/api/updateData', async (req, res) => {
     const authHeader = req.headers.authorization;
     if (
         !process.env.CRON_SECRET ||

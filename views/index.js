@@ -161,7 +161,7 @@ app.get('/api/updateData', async (req, res) => {
     } else {
         try {
             const success = await updateVercelReformAttendanceData();
-
+            console.log('successfully updated councils');
             res.status(200).json(success);
         } catch (err) {
             res.status(500).json({ success: false, err: err });

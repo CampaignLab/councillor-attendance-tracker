@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { updateVercelReformAttendanceData } from './scrapers/vercelstandard';
+import { list } from '@vercel/blob';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,16 +51,55 @@ app.get('/api/councils', async (req, res) => {
         const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
         const councilMeta = JSON.parse(councilsJson);
 
-        const files = await fs.readdir(OUT_DIR);
-        const councilFiles = files.filter((f) => f.endsWith('Data.json'));
+        // PRE VERCEL CODE
+        // const files = await fs.readdir(OUT_DIR);
+        // const councilFiles = files.filter((f) => f.endsWith('Data.json'));
+        // const councils = [];
+        // for (const file of councilFiles) {
+        //     try {
+        //         const data = await fs.readFile(
+        //             path.join(OUT_DIR, file),
+        //             'utf-8'
+        //         );
+        //         const json = JSON.parse(data);
+        //         // Try to match by councilName (case-insensitive, trimmed)
+        //         let meta = councilMeta.find(
+        //             (c) =>
+        //                 c.councilName.trim().toLowerCase() ===
+        //                 json.councilName.trim().toLowerCase()
+        //         );
+        //         // If not found, try matching by fileName (ignoring Data.json suffix)
+        //         if (!meta) {
+        //             const fileBase = file
+        //                 .replace(/Data\.json$/i, '')
+        //                 .toLowerCase();
+        //             meta = councilMeta.find(
+        //                 (c) => c.fileName.trim().toLowerCase() === fileBase
+        //             );
+        //         }
+        //         councils.push({
+        //             councilName: json.councilName,
+        //             fileName: file,
+        //             baseUrl: meta ? meta.baseUrl : '',
+        //         });
+        //     } catch (err) {
+        //         // skip files that can't be read/parsed
+        //     }
+        // }
+        // res.json(councils);
+
+        // POST VERCEL CODE
+        const { blobs } = await list();
+        const councilBlobs = blobs.filter((b) =>
+            b.pathname.endsWith('Data.json')
+        );
         const councils = [];
-        for (const file of councilFiles) {
+        for (const blob of councilBlobs) {
             try {
-                const data = await fs.readFile(
-                    path.join(OUT_DIR, file),
-                    'utf-8'
-                );
-                const json = JSON.parse(data);
+                const json = await fetch(blob.url).then((res) => {
+                    return res.json();
+                });
+
                 // Try to match by councilName (case-insensitive, trimmed)
                 let meta = councilMeta.find(
                     (c) =>
@@ -68,16 +108,18 @@ app.get('/api/councils', async (req, res) => {
                 );
                 // If not found, try matching by fileName (ignoring Data.json suffix)
                 if (!meta) {
-                    const fileBase = file
+                    const fileBase = blob.pathname
                         .replace(/Data\.json$/i, '')
                         .toLowerCase();
                     meta = councilMeta.find(
                         (c) => c.fileName.trim().toLowerCase() === fileBase
                     );
                 }
+
                 councils.push({
                     councilName: json.councilName,
-                    fileName: file,
+                    fileName: blob.pathname,
+                    fileUrl: blob.url,
                     baseUrl: meta ? meta.baseUrl : '',
                 });
             } catch (err) {
@@ -91,8 +133,10 @@ app.get('/api/councils', async (req, res) => {
 });
 
 // Get data for a specific council
+// this api call is basically redundant after vercel implemented
 app.get('/api/council/:file', async (req, res) => {
     try {
+        // pre vercel code
         const filePath = path.join(OUT_DIR, req.params.file);
         const data = await fs.readFile(filePath, 'utf-8');
         res.json(JSON.parse(data));
@@ -106,6 +150,7 @@ app.get('/', (req, res) => {
 });
 
 // vercel cron job
+// secured with cron secret
 app.get('/api/updateData', async (req, res) => {
     const authHeader = req.headers.authorization;
     if (

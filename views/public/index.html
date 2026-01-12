@@ -281,8 +281,8 @@
       const res = await fetch('/api/councils');
       councils = await res.json();
       const select = document.getElementById('councilSelect');
-      select.innerHTML = councils.map(c => `<option value="${c.fileName}">${c.councilName}</option>`).join('');
-      if (councils.length) loadAttendance(councils[0].fileName);
+      select.innerHTML = councils.map(c => `<option value="${c.fileURL}">${c.councilName}</option>`).join('');
+      if (councils.length) loadAttendance(councils[0].fileURL);
       select.onchange = () => loadAttendance(select.value);
       await loadAllCouncillors();
       allCouncillorsLoaded = true;
@@ -292,12 +292,12 @@
       }
     }
 
-    async function loadAttendance(fileName) {
-      const res = await fetch(`/api/council/${fileName}`);
+    async function loadAttendance(fileURL) {
+      const res = await fetch(fileURL);
       const data = await res.json();
       const div = document.getElementById('attendance');
       // Find baseUrl for this council
-      const councilObj = councils.find(c => c.fileName === fileName);
+      const councilObj = councils.find(c => c.fileName === fileURL);
       const baseUrl = councilObj ? councilObj.baseUrl : '';
       let councillors = data.attendanceData.map(c => ({
         ...c,
@@ -415,7 +415,7 @@
       allCouncillors = [];
       allCouncillorsLoaded = false;
       for (const council of councils) {
-        const res = await fetch(`/api/council/${council.fileName}`);
+        const res = await fetch(council.fileURL);
         const data = await res.json();
         if (data.attendanceData) {
           allCouncillors.push(...data.attendanceData.map(c => {

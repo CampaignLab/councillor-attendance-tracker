@@ -160,7 +160,7 @@ const main = async () => {
     // const councilsJsonPath = path.resolve('./councils.json');
     // const jsonCouncils = await fs.readFile(councilsJsonPath);
     // const councils = JSON.parse(jsonCouncils);
-    const councils = councilsJson;
+    const councils = councilsJson.default;
     try {
         await fs.access('./out');
     } catch (err) {

@@ -51,7 +51,7 @@ app.get('/api/councils', async (req, res) => {
         // const councilsJsonPath = path.resolve('./scrapers/councils.json');
         // const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
         // const councilMeta = JSON.parse(councilsJson);
-        const councilMeta = councilsJson;
+        const councilMeta = councilsJson.default;
         console.log(councilMeta);
 
         // PRE VERCEL CODE

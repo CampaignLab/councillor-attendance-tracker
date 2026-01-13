@@ -1,6 +1,11 @@
 {
     "$schema": "https://openapi.vercel.sh/vercel.json",
     "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+    "functions": {
+        "api/updateData": {
+            "maxDuration": 600
+        }
+    },
     "crons": [
         {
             "path": "/api/updateData",

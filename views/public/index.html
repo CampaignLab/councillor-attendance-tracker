@@ -281,7 +281,7 @@
       const res = await fetch('/api/councils');
       councils = await res.json();
       const select = document.getElementById('councilSelect');
-      select.innerHTML = councils.map(c => `<option value="${{fileurl: c.fileUrl, filename: c.fileName}}">${c.councilName}</option>`).join('');
+      select.innerHTML = councils.map(c => `<option value='{"fileurl":"${c.fileUrl}", "filename":"${c.fileName}"}'>${c.councilName}</option>`).join('');
       if (councils.length) loadAttendance(councils[0].fileUrl, councils[0].fileName);
       select.onchange = () => {
         const councilObj = JSON.parse(select.value);

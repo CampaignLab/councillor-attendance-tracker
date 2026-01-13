@@ -95,7 +95,6 @@ app.get('/api/councils', async (req, res) => {
         const councilBlobs = blobs.filter((b) =>
             b.pathname.endsWith('Data.json')
         );
-        console.log(councilBlobs);
         const councils = [];
         for (const blob of councilBlobs) {
             try {
@@ -130,6 +129,7 @@ app.get('/api/councils', async (req, res) => {
                 // skip files that can't be read/parsed
             }
         }
+        console.log(councils);
         res.json(councils);
     } catch (err) {
         res.status(500).json({ error: 'Failed to list councils.' });

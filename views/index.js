@@ -52,7 +52,6 @@ app.get('/api/councils', async (req, res) => {
         // const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
         // const councilMeta = JSON.parse(councilsJson);
         const councilMeta = councilsJson.default;
-        console.log(councilMeta);
 
         // PRE VERCEL CODE
         // const files = await fs.readdir(OUT_DIR);

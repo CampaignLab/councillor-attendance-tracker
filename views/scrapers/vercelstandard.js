@@ -8,8 +8,6 @@ const updateVercelReformAttendanceData = async () => {
     // const jsonCouncils = await fs.readFile(councilsJsonPath);
     // const councils = JSON.parse(jsonCouncils);
     const councils = councilsJson.default;
-    console.log(councils);
-    console.log(councils[0].councilName)
 
     for (let { fileName, councilName, baseUrl } of councils) {
         try {

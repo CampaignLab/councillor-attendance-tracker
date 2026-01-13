@@ -129,7 +129,6 @@ app.get('/api/councils', async (req, res) => {
                 // skip files that can't be read/parsed
             }
         }
-        console.log(councils);
         res.json(councils);
     } catch (err) {
         res.status(500).json({ error: 'Failed to list councils.' });

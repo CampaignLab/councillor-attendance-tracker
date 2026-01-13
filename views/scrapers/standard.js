@@ -1,6 +1,8 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs/promises';
 import path from 'path';
+import * as councilsJson from './councils.json';
+
 // TODO:
 // Double check that redirects work (eg tunbridgeWells probably has a redirect) - looks like they dont so fix that
 // ok redirects probably do work - tunbridge wells just has a different issue fsr
@@ -155,9 +157,10 @@ export const collectReformAttendanceData = async (
 };
 
 const main = async () => {
-    const councilsJsonPath = path.resolve('./councils.json');
-    const jsonCouncils = await fs.readFile(councilsJsonPath);
-    const councils = JSON.parse(jsonCouncils);
+    // const councilsJsonPath = path.resolve('./councils.json');
+    // const jsonCouncils = await fs.readFile(councilsJsonPath);
+    // const councils = JSON.parse(jsonCouncils);
+    const councils = councilsJson;
     try {
         await fs.access('./out');
     } catch (err) {

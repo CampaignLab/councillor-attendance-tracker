@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import updateVercelReformAttendanceData from './scrapers/vercelstandard.js';
 import { list } from '@vercel/blob';
+import * as councilsJson from './scrapers/councils.json';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,9 +48,10 @@ app.get('/api/headshot', async (req, res) => {
 app.get('/api/councils', async (req, res) => {
     try {
         // Read councils.json to get baseUrl mapping
-        const councilsJsonPath = path.resolve('./scrapers/councils.json');
-        const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
-        const councilMeta = JSON.parse(councilsJson);
+        // const councilsJsonPath = path.resolve('./scrapers/councils.json');
+        // const councilsJson = await fs.readFile(councilsJsonPath, 'utf-8');
+        // const councilMeta = JSON.parse(councilsJson);
+        const councilMeta = councilsJson;
 
         // PRE VERCEL CODE
         // const files = await fs.readdir(OUT_DIR);

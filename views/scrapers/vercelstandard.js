@@ -1,11 +1,13 @@
 import { collectReformAttendanceData } from './standard.js';
 import { put } from '@vercel/blob';
 import path from 'path';
+import * as councilsJson from './councils.json';
 
 const updateVercelReformAttendanceData = async () => {
-    const councilsJsonPath = path.resolve('./councils.json');
-    const jsonCouncils = await fs.readFile(councilsJsonPath);
-    const councils = JSON.parse(jsonCouncils);
+    // const councilsJsonPath = path.resolve('./councils.json');
+    // const jsonCouncils = await fs.readFile(councilsJsonPath);
+    // const councils = JSON.parse(jsonCouncils);
+    const councils = councilsJson;
 
     for (let { fileName, councilName, baseUrl } of councils) {
         try {

@@ -282,7 +282,7 @@
       councils = await res.json();
       const select = document.getElementById('councilSelect');
       select.innerHTML = councils.map(c => `<option value="${c.fileURL}">${c.councilName}</option>`).join('');
-      if (councils.length) loadAttendance(councils[0].fileURL);
+      if (councils.length) loadAttendance(councils[0].fileUrl);
       select.onchange = () => loadAttendance(select.value);
       await loadAllCouncillors();
       allCouncillorsLoaded = true;
@@ -415,7 +415,7 @@
       allCouncillors = [];
       allCouncillorsLoaded = false;
       for (const council of councils) {
-        const res = await fetch(council.fileURL);
+        const res = await fetch(council.fileUrl);
         const data = await res.json();
         if (data.attendanceData) {
           allCouncillors.push(...data.attendanceData.map(c => {

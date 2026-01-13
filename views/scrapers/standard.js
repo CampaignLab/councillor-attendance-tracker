@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs/promises';
 import path from 'path';
-import * as councilsJson from './councils.json';
+import * as councilsJson from './councils.json' with {type: 'json'};
 
 // TODO:
 // Double check that redirects work (eg tunbridgeWells probably has a redirect) - looks like they dont so fix that

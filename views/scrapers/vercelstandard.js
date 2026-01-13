@@ -1,7 +1,7 @@
 import { collectReformAttendanceData } from './standard.js';
 import { put } from '@vercel/blob';
 import path from 'path';
-import * as councilsJson from './councils.json';
+import * as councilsJson from './councils.json' with {type: 'json'};
 
 const updateVercelReformAttendanceData = async () => {
     // const councilsJsonPath = path.resolve('./councils.json');

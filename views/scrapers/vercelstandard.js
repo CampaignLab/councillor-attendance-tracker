@@ -27,4 +27,4 @@ const updateVercelReformAttendanceData = async () => {
     return { success: true };
 };
 
-export default { updateVercelReformAttendanceData };
+export default updateVercelReformAttendanceData;

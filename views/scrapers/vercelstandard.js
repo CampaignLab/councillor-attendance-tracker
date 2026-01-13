@@ -7,7 +7,7 @@ const updateVercelReformAttendanceData = async () => {
     // const councilsJsonPath = path.resolve('./councils.json');
     // const jsonCouncils = await fs.readFile(councilsJsonPath);
     // const councils = JSON.parse(jsonCouncils);
-    const councils = councilsJson;
+    const councils = await JSON.parse(councilsJson);
     console.log(councils);
     console.log(councils[0].councilName)
 

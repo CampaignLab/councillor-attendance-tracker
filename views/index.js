@@ -95,12 +95,14 @@ app.get('/api/councils', async (req, res) => {
         const councilBlobs = blobs.filter((b) =>
             b.pathname.endsWith('Data.json')
         );
+        console.log(councilBlobs);
         const councils = [];
         for (const blob of councilBlobs) {
             try {
                 const json = await fetch(blob.url).then((res) => {
                     return res.json();
                 });
+
 
                 // Try to match by councilName (case-insensitive, trimmed)
                 let meta = councilMeta.find(

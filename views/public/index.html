@@ -285,7 +285,7 @@
       if (councils.length) loadAttendance(councils[0].fileUrl, councils[0].fileName);
       select.onchange = () => {
         const councilObj = JSON.parse(select.value);
-        loadAttendance(councilObj.fileUrl, councilObj.fileName);
+        loadAttendance(councilObj.fileurl, councilObj.filename);
       }
       await loadAllCouncillors();
       allCouncillorsLoaded = true;

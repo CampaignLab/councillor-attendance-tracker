@@ -1,4 +1,4 @@
-import { collectReformAttendanceData } from './standard';
+import { collectReformAttendanceData } from './standard.js';
 import { put } from '@vercel/blob';
 
 const updateVercelReformAttendanceData = async () => {

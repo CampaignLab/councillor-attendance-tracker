@@ -1,5 +1,10 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // TODO:
 // Double check that redirects work (eg tunbridgeWells probably has a redirect) - looks like they dont so fix that
@@ -155,7 +160,9 @@ export const collectReformAttendanceData = async (
 };
 
 const main = async () => {
-    const jsonCouncils = await fs.readFile('./councils.json');
+    const jsonCouncils = await fs.readFile(
+        path.join(__dirname, 'public', 'councils.json')
+    );
     const councils = JSON.parse(jsonCouncils);
     try {
         await fs.access('./out');

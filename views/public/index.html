@@ -281,9 +281,12 @@
       const res = await fetch('/api/councils');
       councils = await res.json();
       const select = document.getElementById('councilSelect');
-      select.innerHTML = councils.map(c => `<option value="${c.fileURL}">${c.councilName}</option>`).join('');
-      if (councils.length) loadAttendance(councils[0].fileUrl);
-      select.onchange = () => loadAttendance(select.value);
+      select.innerHTML = councils.map(c => `<option value="${JSON.stringify(c)}">${c.councilName}</option>`).join('');
+      if (councils.length) loadAttendance(councils[0].fileUrl, councils[0].fileName);
+      select.onchange = () => {
+        const councilObj = JSON.parse(select.value);
+        loadAttendance(councilObj.fileUrl, councilObj.fileName);
+      }
       await loadAllCouncillors();
       allCouncillorsLoaded = true;
       // If user is on Worst Offenders tab, re-render after loading
@@ -292,12 +295,12 @@
       }
     }
 
-    async function loadAttendance(fileURL) {
+    async function loadAttendance(fileURL, fileName) {
       const res = await fetch(fileURL);
       const data = await res.json();
       const div = document.getElementById('attendance');
       // Find baseUrl for this council
-      const councilObj = councils.find(c => c.fileName === fileURL);
+      const councilObj = councils.find(c => c.fileName === fileName);
       const baseUrl = councilObj ? councilObj.baseUrl : '';
       let councillors = data.attendanceData.map(c => ({
         ...c,

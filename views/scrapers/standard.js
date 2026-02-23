@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs/promises';
 import path from 'path';
-import * as councilsJson from './councils.json' with {type: 'json'};
+import * as councilsJson from './councils.json' with { type: 'json' };
 
 // TODO:
 // Double check that redirects work (eg tunbridgeWells probably has a redirect) - looks like they dont so fix that
@@ -95,6 +95,61 @@ const getReformCouncillorUrls = (councillorsPageHtml) => {
     return UIDs;
 };
 
+// multi party version:
+const getCouncillorParties = (councillorsPageHtml) => {
+    const $ = cheerio.load(councillorsPageHtml);
+
+    const $councillorRows = $('table.mgStatsTable:first > tbody:first > tr');
+
+    console.log(`${$councillorRows.length} councillors found.`);
+
+    let partyDict = {};
+
+    // Parties to identify:
+    // Labour
+    // Conservative
+    // Reform
+    // Green (/ Green independent alliance?)
+    // Liberal Democrat
+    // Independent (not allied with greens)
+    // Unidentified (maybe dont say other in case some from the above parties get missed)
+    $councillorRows.each((i, el) => {
+        const partyCol = $(el).children('td')[2];
+        const partyText = $(partyCol).text();
+        let party = '';
+        if (
+            partyText
+                .replaceAll('(', '')
+                .replaceAll(')', '')
+                .replaceAll(' ', '')
+                .slice(0, 6) === 'Reform'
+        ) {
+            party = 'Reform UK';
+        } else if (partyText.includes('Green')) {
+            party = 'Green';
+        } else if (partyText.includes('Labour')) {
+            party = 'Labour';
+        } else if (partyText.includes('Conservative')) {
+            party = 'Conservatives';
+        } else if (partyText.includes('Liberal Democrat')) {
+            party = 'Liberal Democrats';
+        } else if (partyText.includes('Independent')) {
+            party = 'Independent';
+        } else {
+            party = 'Unidentified';
+        }
+
+        // Get uid
+        const infoCol = $(el).children('td')[1];
+        const uid = $($($(infoCol).children('p')[0]).children('a')[0])
+            .attr('href')
+            .slice(20);
+        partyDict[uid] = party;
+    });
+
+    return partyDict;
+};
+
 const getReformAttendanceData = (attendanceHtml, UIDs) => {
     // eventually make this work for multiple parties - for now just setting party = "reform" for everyone
     const party = 'reform';
@@ -115,7 +170,7 @@ const getReformAttendanceData = (attendanceHtml, UIDs) => {
         return UIDs.includes(uid);
     });
 
-    let data = []; // {uid: str, name: str, expected: int, present: int}
+    let data = []; // {uid: str, name: str, expected: int, present: int, party: string}
     $reformRows.each((i, el) => {
         const children = $(el).children('td');
 
@@ -136,6 +191,41 @@ const getReformAttendanceData = (attendanceHtml, UIDs) => {
     return data;
 };
 
+const getCouncillorAttendanceData = (attendanceHtml, partyDict) => {
+    const $ = cheerio.load(attendanceHtml);
+
+    const $header = $('table.mgStatsTable:first > thead:first > tr:first > th');
+
+    const virtual =
+        $($header[3]).attr('abbr').toLowerCase() === 'present virtual'; // assuming there are no other edge cases pls?
+
+    const $rows = $('table.mgStatsTable:first > tbody:first > tr');
+    let data = []; // {uid: str, name: str, expected: int, present: int}
+    $rows.each((i, el) => {
+        const children = $(el).children('td');
+
+        const councillorCol = children[0];
+        const councillorUrl = $($(councillorCol).children('a')[0]).attr('href');
+        const params = councillorUrl.slice(22);
+        const uid = params.split('&')[0];
+
+        const party = partyDict[uid];
+
+        if (party !== undefined) {
+            const name = $($(councillorCol).children('a')[0]).text();
+            const expected = parseInt($(children[1]).text());
+            let present = parseInt($(children[2]).text());
+            if (virtual) {
+                present += parseInt($(children[3]).text());
+            }
+
+            data.push({ uid, name, expected, present, party });
+        }
+    });
+
+    return data;
+};
+
 export const collectReformAttendanceData = async (
     councilName,
     baseUrl,
@@ -152,6 +242,29 @@ export const collectReformAttendanceData = async (
         endDate
     );
     const attendanceData = getReformAttendanceData(attendanceHtml, reformUIDs);
+
+    return attendanceData;
+};
+
+export const collectAllAttendanceData = async (
+    councilName,
+    baseUrl,
+    startDate = { day: 1, month: 5, year: 2025 },
+    endDate = { day: 31, month: 12, year: 2040 }
+) => {
+    const councillorsHtml = await getCouncillorsPage(councilName, baseUrl);
+    const partyDict = getCouncillorParties(councillorsHtml);
+
+    const attendanceHtml = await getAttendancePage(
+        councilName,
+        baseUrl,
+        startDate,
+        endDate
+    );
+    const attendanceData = getCouncillorAttendanceData(
+        attendanceHtml,
+        partyDict
+    );
 
     return attendanceData;
 };
@@ -184,5 +297,30 @@ const main = async () => {
         }
     }
 };
+
+const newMain = async () => {
+    const councils = councilsJson.default;
+    try {
+        await fs.access('./out');
+    } catch (err) {
+        await fs.mkdir('./out');
+    }
+
+    for (let { fileName, councilName, baseUrl } of councils) {
+        try {
+            console.log(`Gathering data for: ${councilName}`);
+            const data = await collectAllAttendanceData(councilName, baseUrl);
+            // this object will eventually contain a list of councillor objects from all parties - for now everyone will be a reform councillor
+            const obj = { councilName, attendanceData: data };
+            const jsonStr = JSON.stringify(obj);
+            await fs.writeFile(`./out/${fileName}Data.json`, jsonStr);
+        } catch (err) {
+            console.log(`${councilName} didnt work`);
+            console.error(err);
+        }
+    }
+};
+
+// newMain();
 
 // main();

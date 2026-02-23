@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import updateVercelReformAttendanceData from './scrapers/vercelstandard.js';
 import { list } from '@vercel/blob';
-import * as councilsJson from './scrapers/councils.json' with {type: 'json'};
+import * as councilsJson from './scrapers/councils.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -102,7 +102,6 @@ app.get('/api/councils', async (req, res) => {
                     return res.json();
                 });
 
-
                 // Try to match by councilName (case-insensitive, trimmed)
                 let meta = councilMeta.find(
                     (c) =>
@@ -129,6 +128,7 @@ app.get('/api/councils', async (req, res) => {
                 // skip files that can't be read/parsed
             }
         }
+        res.set('Cache-Control', 'public, max-age=1209600'); // 2 weeks
         res.json(councils);
     } catch (err) {
         res.status(500).json({ error: 'Failed to list councils.' });
@@ -163,9 +163,9 @@ app.get('/api/updateData', async (req, res) => {
         res.status(401).json({ success: false });
     } else {
         // try {
-            const success = await updateVercelReformAttendanceData();
-            console.log('successfully updated councils');
-            res.status(200).json(success);
+        const success = await updateVercelReformAttendanceData();
+        console.log('successfully updated councils');
+        res.status(200).json(success);
         // } catch (err) {
         //     res.status(500).json({ success: false, err: err });
         // }

@@ -1,7 +1,7 @@
-import { collectReformAttendanceData } from './standard.js';
+import { collectAllAttendanceData } from './standard.js';
 import { put } from '@vercel/blob';
 import path from 'path';
-import * as councilsJson from './councils.json' with {type: 'json'};
+import * as councilsJson from './councils.json' with { type: 'json' };
 
 const updateVercelReformAttendanceData = async () => {
     // const councilsJsonPath = path.resolve('./councils.json');
@@ -12,10 +12,7 @@ const updateVercelReformAttendanceData = async () => {
     for (let { fileName, councilName, baseUrl } of councils) {
         try {
             console.log(`Gathering data for: ${councilName}`);
-            const data = await collectReformAttendanceData(
-                councilName,
-                baseUrl
-            );
+            const data = await collectAllAttendanceData(councilName, baseUrl);
             // this object will eventually contain a list of councillor objects from all parties - for now everyone will be a reform councillor
             const obj = { councilName, attendanceData: data };
             const jsonStr = JSON.stringify(obj);

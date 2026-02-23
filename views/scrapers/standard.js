@@ -140,11 +140,13 @@ const getCouncillorParties = (councillorsPageHtml) => {
         }
 
         // Get uid
-        const infoCol = $(el).children('td')[1];
-        const uid = $($($(infoCol).children('p')[0]).children('a')[0])
-            .attr('href')
-            .slice(20);
-        partyDict[uid] = party;
+        if (party === 'Reform UK' || party === 'Conservatives') {
+            const infoCol = $(el).children('td')[1];
+            const uid = $($($(infoCol).children('p')[0]).children('a')[0])
+                .attr('href')
+                .slice(20);
+            partyDict[uid] = party;
+        }
     });
 
     return partyDict;
@@ -321,6 +323,6 @@ const newMain = async () => {
     }
 };
 
-// newMain();
+newMain();
 
 // main();

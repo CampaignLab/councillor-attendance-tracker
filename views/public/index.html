@@ -180,6 +180,8 @@
   </div>
   <script>
     // Global poster functions (must be defined before usage)
+    const DEFAULT_IMG = "https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg";
+
     window.showPoster = function(councillor) {
       document.getElementById('view-council').style.display = 'none';
       document.getElementById('view-worst').style.display = 'none';
@@ -187,7 +189,7 @@
       fetch(`/api/headshot?url=${encodeURIComponent(councillor.detailsUrl)}`)
         .then(res => res.json())
         .then(data => {
-          const imgSrc = data.img || '';
+          const imgSrc = data.img || DEFAULT_IMG;
           document.getElementById('posterView').innerHTML = `
             <div class="poster-view" id="posterContent">
               <div class="poster-title">Missing!</div>
@@ -357,10 +359,8 @@
           fetch(`/api/headshot?url=${encodeURIComponent(c.detailsUrl)}`)
             .then(res => res.json())
             .then(data => {
-              if (data.img) {
                 const imgEl = document.getElementById(`headshot-${c.uid}`);
-                if (imgEl) imgEl.src = data.img;
-              }
+                if (imgEl) imgEl.src = data.img ? data.img : DEFAULT_IMG;
             });
         });
         document.getElementById('percentHeader').onclick = () => {
@@ -399,10 +399,9 @@
           fetch(`/api/headshot?url=${encodeURIComponent(c.detailsUrl)}`)
             .then(res => res.json())
             .then(data => {
-              if (data.img) {
                 const imgEl = document.getElementById(`headshot-${c.uid}`);
-                if (imgEl) imgEl.src = data.img;
-              }
+                if (imgEl) imgEl.src = data.img ? data.img : DEFAULT_IMG;
+              
             });
         });
         document.getElementById('percentHeader').onclick = () => {
@@ -494,7 +493,7 @@
       fetch(`/api/headshot?url=${encodeURIComponent(councillor.detailsUrl)}`)
         .then(res => res.json())
         .then(data => {
-          const imgSrc = data.img || '';
+          const imgSrc = data.img || DEFAULT_IMG;
           document.getElementById('posterView').innerHTML = `
             <div class="poster-view" id="posterContent">
               <div class="poster-title">Missing!</div>
@@ -548,10 +547,8 @@
         fetch(`/api/headshot?url=${encodeURIComponent(c.detailsUrl)}`)
           .then(res => res.json())
           .then(data => {
-            if (data.img) {
               const imgEl = document.getElementById(`worst-headshot-${c.uid}-${c.fileName}`);
-              if (imgEl) imgEl.src = data.img;
-            }
+              if (imgEl) imgEl.src = data.img ? data.img : DEFAULT_IMG;
           });
       });
       document.getElementById('percentMissedHeader').onclick = () => {

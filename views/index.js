@@ -39,7 +39,7 @@ app.get('/api/headshot', async (req, res) => {
         const base = new URL(url);
         if (img.startsWith('/')) img = base.origin + img;
         else if (!img.startsWith('http')) img = base.origin + '/' + img;
-        res.set('Cache-Control', 'public, max-age=1209600');
+        res.set('Cache-Control', 'public, max-age=0');
         res.json({ img });
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch headshot' });

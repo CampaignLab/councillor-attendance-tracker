@@ -193,7 +193,7 @@
           document.getElementById('posterView').innerHTML = `
             <div class="poster-view" id="posterContent">
               <div class="poster-title">Missing!</div>
-              <img class="poster-headshot" src="${imgSrc}" alt="${councillor.name}" />
+              <img class="poster-headshot" src="${imgSrc}" alt="${councillor.name}" onerror="this.onerror=null; this.src='${DEFAULT_IMG}'" />
               <div class="poster-details">
                 <strong>${councillor.name}</strong><br>
                 <span>${councillor.councilName}</span><br>
@@ -341,7 +341,7 @@
               };
               window._councillorPosterData = window._councillorPosterData || {};
               window._councillorPosterData[c.uid] = posterData;
-              return `<tr style="${getPartyBg(c.party)}"><td><img class="headshot" id="headshot-${c.uid}" alt="${c.name}" /></td><td><a href="${c.detailsUrl}" target="_blank" rel="noopener">${c.name}</a></td><td>${c.party || ''}</td><td>${c.expected}</td><td>${c.present}</td><td>${c.percent}%</td><td><button class="poster-btn" data-uid="${c.uid}">Missing Poster</button></td></tr>`;
+              return `<tr style="${getPartyBg(c.party)}"><td><img class="headshot" id="headshot-${c.uid}" alt="${c.name}" onerror="this.onerror=null; this.src='${DEFAULT_IMG}'" /></td><td><a href="${c.detailsUrl}" target="_blank" rel="noopener">${c.name}</a></td><td>${c.party || ''}</td><td>${c.expected}</td><td>${c.present}</td><td>${c.percent}%</td><td><button class="poster-btn" data-uid="${c.uid}">Missing Poster</button></td></tr>`;
             }).join('') + '</table>';
         }
         div.innerHTML += renderPartyTable(sorted);
@@ -471,7 +471,7 @@
         sorted.map(c => {
           window._councillorPosterData = window._councillorPosterData || {};
           window._councillorPosterData[`${c.uid}-${c.fileName}`] = c;
-          return `<tr style="${getPartyBg(c.party)}"><td><img class="headshot" id="worst-headshot-${c.uid}-${c.fileName}" alt="${c.name}" /></td><td><a href="${c.detailsUrl}" target="_blank" rel="noopener">${c.name}</a></td><td>${c.party || ''}</td><td>${c.councilName}</td><td>${c.expected}</td><td>${c.present}</td><td>${c.percentMissed}%</td><td>${c.nrMissed}</td><td><button class="poster-btn" data-uid="${c.uid}-${c.fileName}">Missing Poster</button></td></tr>`;
+          return `<tr style="${getPartyBg(c.party)}"><td><img class="headshot" id="worst-headshot-${c.uid}-${c.fileName}" alt="${c.name}" onerror="this.onerror=null; this.src='${DEFAULT_IMG}'" /></td><td><a href="${c.detailsUrl}" target="_blank" rel="noopener">${c.name}</a></td><td>${c.party || ''}</td><td>${c.councilName}</td><td>${c.expected}</td><td>${c.present}</td><td>${c.percentMissed}%</td><td>${c.nrMissed}</td><td><button class="poster-btn" data-uid="${c.uid}-${c.fileName}">Missing Poster</button></td></tr>`;
         }).join('') + '</table>';
       // Attach event listeners for poster buttons
       setTimeout(() => {
@@ -497,7 +497,7 @@
           document.getElementById('posterView').innerHTML = `
             <div class="poster-view" id="posterContent">
               <div class="poster-title">Missing!</div>
-              <img class="poster-headshot" src="${imgSrc}" alt="${councillor.name}" />
+              <img class="poster-headshot" src="${imgSrc}" alt="${councillor.name}" onerror="this.onerror=null; this.src='${DEFAULT_IMG}'" />
               <div class="poster-details">
                 <strong>${councillor.name}</strong><br>
                 <span>${councillor.councilName}</span><br>

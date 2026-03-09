@@ -425,9 +425,11 @@
             // Find the correct council object for this councillor
             const councilObj = councils.find(cc => cc.councilName === data.councilName);
             const baseUrl = councilObj ? councilObj.baseUrl : '';
+            const fileName = councilObj ? councilObj.fileName : '';
             return {
               ...c,
               councilName: data.councilName,
+              fileName: fileName,
               percentMissed: c.expected > 0 ? Math.round(100 - (c.present / c.expected) * 100) : 0,
               nrMissed: c.expected - c.present,
               detailsUrl: baseUrl ? `${baseUrl}mgUserInfo.aspx?UID=${c.uid}` : ''
@@ -469,8 +471,8 @@
       </tr>` +
         sorted.map(c => {
           window._councillorPosterData = window._councillorPosterData || {};
-          window._councillorPosterData[c.uid] = c;
-          return `<tr style="${getPartyBg(c.party)}"><td><img class="headshot" id="worst-headshot-${c.uid}" alt="${c.name}" /></td><td><a href="${c.detailsUrl}" target="_blank" rel="noopener">${c.name}</a></td><td>${c.party || ''}</td><td>${c.councilName}</td><td>${c.expected}</td><td>${c.present}</td><td>${c.percentMissed}%</td><td>${c.nrMissed}</td><td><button class="poster-btn" data-uid="${c.uid}">Missing Poster</button></td></tr>`;
+          window._councillorPosterData[`${c.uid}-${c.fileName}`] = c;
+          return `<tr style="${getPartyBg(c.party)}"><td><img class="headshot" id="worst-headshot-${c.uid}-${c.fileName}" alt="${c.name}" /></td><td><a href="${c.detailsUrl}" target="_blank" rel="noopener">${c.name}</a></td><td>${c.party || ''}</td><td>${c.councilName}</td><td>${c.expected}</td><td>${c.present}</td><td>${c.percentMissed}%</td><td>${c.nrMissed}</td><td><button class="poster-btn" data-uid="${c.uid}-${c.fileName}">Missing Poster</button></td></tr>`;
         }).join('') + '</table>';
       // Attach event listeners for poster buttons
       setTimeout(() => {
@@ -547,7 +549,7 @@
           .then(res => res.json())
           .then(data => {
             if (data.img) {
-              const imgEl = document.getElementById(`worst-headshot-${c.uid}`);
+              const imgEl = document.getElementById(`worst-headshot-${c.uid}-${c.fileName}`);
               if (imgEl) imgEl.src = data.img;
             }
           });

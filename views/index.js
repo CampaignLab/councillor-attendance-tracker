@@ -19,7 +19,6 @@ app.use(express.static('public'));
 // API endpoint to get councillor headshot
 app.get('/api/headshot', async (req, res) => {
     const { url } = req.query;
-    console.log('get vercel to deploy?');
     if (!url) return res.status(400).json({ error: 'Missing url parameter' });
     try {
         const response = await fetch(url);

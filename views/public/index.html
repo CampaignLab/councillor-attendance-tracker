@@ -172,6 +172,7 @@
     <div id="view-council">
       <label for="councilSelect">Select Council:</label>
       <select id="councilSelect"></select>
+      <div id="partyFilterContainer"></div>
       <div id="attendance"></div>
     </div>
     <div id="view-worst" style="display:none">
@@ -314,10 +315,12 @@
         const sorted = [...councillors].sort((a, b) => sortAsc ? a.percent - b.percent : b.percent - a.percent);
         // Party filter dropdown
         const parties = Array.from(new Set(councillors.map(c => c.party).filter(Boolean)));
+        const filterDivOuter = document.getElementById("partyFilterContainer");
+        filterDivOuter.innerHTML = '';
         const filterDiv = document.createElement('div');
         filterDiv.innerHTML = `<label for="partyFilter">Filter by party:</label> <select id="partyFilter"><option value="all">All</option>${parties.map(p => `<option value="${p}">${p}</option>`).join('')}</select>`;
         div.innerHTML = '';
-        div.appendChild(filterDiv);
+        filterDivOuter.appendChild(filterDiv);
         // Render table with party backgrounds
         function getPartyBg(party) {
           if (!party) return '';
@@ -375,7 +378,6 @@
           let filtered = sorted;
           if (val && val !== "all") filtered = sorted.filter(c => c.party === val);
           div.innerHTML = '';
-          div.appendChild(filterDiv);
           div.innerHTML += renderPartyTable(filtered);
           setTimeout(() => {
             div.querySelectorAll('.poster-btn[data-uid]').forEach(btn => {

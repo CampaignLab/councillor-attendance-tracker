@@ -310,7 +310,7 @@
         detailsUrl: baseUrl ? `${baseUrl}mgUserInfo.aspx?UID=${c.uid}` : ''
       }));
       let sortAsc = true;
-      function renderTable() {
+      function renderTable(selectedFilter = "all") {
         const sorted = [...councillors].sort((a, b) => sortAsc ? a.percent - b.percent : b.percent - a.percent);
         // Party filter dropdown
         const parties = Array.from(new Set(councillors.map(c => c.party).filter(Boolean)));
@@ -369,11 +369,11 @@
           renderTable();
         };
         // Party filter event
-        filterDiv.querySelector('#partyFilter').onchange = e => {
+        filterDiv.getElementById('partyFilter').onchange = e => {
           console.log("change happens");
           const val = e.target.value;
           let filtered = sorted;
-          if (val) filtered = sorted.filter(c => c.party === val);
+          if (val && val !== "all") filtered = sorted.filter(c => c.party === val);
           div.innerHTML = '';
           div.appendChild(filterDiv);
           div.innerHTML += renderPartyTable(filtered);

@@ -369,7 +369,7 @@
           renderTable();
         };
         // Party filter event
-        filterDiv.getElementById('partyFilter').onchange = e => {
+        const partyFilterChange = e => {
           console.log("change happens");
           const val = e.target.value;
           let filtered = sorted;
@@ -386,6 +386,9 @@
             });
           }, 0);
         };
+
+        document.getElementById("partyFilter").addEventListener("change", partyFilterChange);
+
         // Attach event listeners for poster buttons
         setTimeout(() => {
           div.querySelectorAll('.poster-btn[data-uid]').forEach(btn => {

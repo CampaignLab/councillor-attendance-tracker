@@ -311,16 +311,29 @@
         detailsUrl: baseUrl ? `${baseUrl}mgUserInfo.aspx?UID=${c.uid}` : ''
       }));
       let sortAsc = true;
+
+      // create party filter
+      const parties = Array.from(new Set(councillors.map(c => c.party).filter(Boolean)));
+      const filterDivOuter = document.getElementById("partyFilterContainer");
+      filterDivOuter.innerHTML = '';
+      const filterDiv = document.createElement('div');
+      filterDiv.innerHTML = `<label for="partyFilter">Filter by party:</label> <select id="partyFilter"><option value="all">All</option>${parties.map(p => `<option value="${p}">${p}</option>`).join('')}</select>`;
+      filterDivOuter.appendChild(filterDiv);
+
+      const partyFilterChange = e => {
+          console.log("change happens");
+          const val = e.target.value;
+          renderTable(val);
+      };
+
+      document.getElementById("partyFilter").addEventListener("change", partyFilterChange);
+
       function renderTable(selectedFilter = "all") {
-        const sorted = [...councillors].sort((a, b) => sortAsc ? a.percent - b.percent : b.percent - a.percent);
-        // Party filter dropdown
-        const parties = Array.from(new Set(councillors.map(c => c.party).filter(Boolean)));
-        const filterDivOuter = document.getElementById("partyFilterContainer");
-        filterDivOuter.innerHTML = '';
-        const filterDiv = document.createElement('div');
-        filterDiv.innerHTML = `<label for="partyFilter">Filter by party:</label> <select id="partyFilter"><option value="all">All</option>${parties.map(p => `<option value="${p}">${p}</option>`).join('')}</select>`;
+        let sorted = [...councillors].sort((a, b) => sortAsc ? a.percent - b.percent : b.percent - a.percent);
+
+        if (selectedFilter !== "all") sorted = sorted.filter(c => c.party === selectedFilter);
+
         div.innerHTML = '';
-        filterDivOuter.appendChild(filterDiv);
         // Render table with party backgrounds
         function getPartyBg(party) {
           if (!party) return '';
@@ -371,25 +384,6 @@
           document.getElementById('percentHeader').innerHTML = `% Attended ${sortAsc ? '&#x25B2;' : '&#x25BC;'}`;
           renderTable();
         };
-        // Party filter event
-        const partyFilterChange = e => {
-          console.log("change happens");
-          const val = e.target.value;
-          let filtered = sorted;
-          if (val && val !== "all") filtered = sorted.filter(c => c.party === val);
-          div.innerHTML = '';
-          div.innerHTML += renderPartyTable(filtered);
-          setTimeout(() => {
-            div.querySelectorAll('.poster-btn[data-uid]').forEach(btn => {
-              btn.onclick = function() {
-                const uid = btn.getAttribute('data-uid');
-                showPoster(window._councillorPosterData[uid]);
-              };
-            });
-          }, 0);
-        };
-
-        document.getElementById("partyFilter").addEventListener("change", partyFilterChange);
 
         // Attach event listeners for poster buttons
         setTimeout(() => {

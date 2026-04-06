@@ -370,6 +370,7 @@
         };
         // Party filter event
         filterDiv.querySelector('#partyFilter').onchange = e => {
+          console.log("change happens");
           const val = e.target.value;
           let filtered = sorted;
           if (val) filtered = sorted.filter(c => c.party === val);

@@ -315,7 +315,7 @@
         // Party filter dropdown
         const parties = Array.from(new Set(councillors.map(c => c.party).filter(Boolean)));
         const filterDiv = document.createElement('div');
-        filterDiv.innerHTML = `<label for="partyFilter">Filter by party:</label> <select id="partyFilter"><option value="">All</option>${parties.map(p => `<option value="${p}">${p}</option>`).join('')}</select>`;
+        filterDiv.innerHTML = `<label for="partyFilter">Filter by party:</label> <select id="partyFilter"><option value="all">All</option>${parties.map(p => `<option value="${p}">${p}</option>`).join('')}</select>`;
         div.innerHTML = '';
         div.appendChild(filterDiv);
         // Render table with party backgrounds

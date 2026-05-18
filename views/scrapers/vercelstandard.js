@@ -22,7 +22,7 @@ const updateVercelReformAttendanceData = async () => {
             }); //probably dont need the output
         } catch (err) {
             console.log(`${councilName} didnt work`);
-            await del(`${fileName}Data.json`); // in case a council stops working, delete the out of date data
+            // await del(`${fileName}Data.json`); // in case a council stops working, delete the out of date data // TODO: CAUSES TIMEOUT - FIND ALTERNATIVE
             console.error(err);
         }
     }

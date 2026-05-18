@@ -448,7 +448,7 @@
 
     function renderPartyFilter() {
       // create party filter
-      const parties = Array.from(new Set(councillors.map(c => c.party).filter(Boolean)));
+      const parties = Array.from(new Set(allCouncillors.map(c => c.party).filter(Boolean)));
       const filterDivOuter = document.getElementById("allPartyFilterContainer");
       filterDivOuter.innerHTML = '';
       const filterDiv = document.createElement('div');

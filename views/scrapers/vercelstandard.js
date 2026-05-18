@@ -1,5 +1,5 @@
 import { collectAllAttendanceData } from './standard.js';
-import { put } from '@vercel/blob';
+import { put, del } from '@vercel/blob';
 import path from 'path';
 import * as councilsJson from './councils.json' with { type: 'json' };
 
@@ -22,6 +22,7 @@ const updateVercelReformAttendanceData = async () => {
             }); //probably dont need the output
         } catch (err) {
             console.log(`${councilName} didnt work`);
+            await del(`${fileName}Data.json`); // in case a council stops working, delete the out of date data
             console.error(err);
         }
     }
